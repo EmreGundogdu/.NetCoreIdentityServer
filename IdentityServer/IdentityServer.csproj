@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Views\" />
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
