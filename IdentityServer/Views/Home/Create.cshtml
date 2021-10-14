@@ -1,9 +1,18 @@
 ﻿@model UserCreateModel
-@{ 
+@{
     Layout = "_Layout";
 }
 <form asp-action="Create" asp-controller="Home" method="post" class="p-3 w-75 mx-auto shadow">
     <div class="mb-3">
         <label>Kullanıcı Adı</label>
+        <input asp-for="Username" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Şifre</label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Şifre Tekrarı</label>
+        <input asp-for="Password" class="form-control" />
     </div>
 </form>
