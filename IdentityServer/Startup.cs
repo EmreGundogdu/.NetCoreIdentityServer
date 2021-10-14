@@ -1,12 +1,15 @@
 using IdentityServer.Context;
+using IdentityServer.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +27,7 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<IdentityContext>();
             services.AddDbContext<IdentityContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("IdentityServerConStr"));
@@ -44,6 +48,12 @@ namespace IdentityServer
             }
 
             app.UseStaticFiles();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/node_mdoules",
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "node_modules"))
+            });
 
             app.UseRouting();
 
