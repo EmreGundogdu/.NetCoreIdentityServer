@@ -12,10 +12,12 @@ namespace IdentityServer.Controllers
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public HomeController(UserManager<AppUser> userManager)
+        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -48,6 +50,31 @@ namespace IdentityServer.Controllers
                 }
             }
             return View(model);
+        }
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignIn(UserSignInModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else if (result.IsLockedOut)
+                {
+                    //hesap kilitli
+                }
+                else if (result.IsNotAllowed)
+                {
+                    //hesap doğrulama yapmamış | email & phone gibi
+                }
+            }
+            return View();
         }
     }
 }
