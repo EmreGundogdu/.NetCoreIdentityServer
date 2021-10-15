@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Entities;
 using IdentityServer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -74,6 +76,11 @@ namespace IdentityServer.Controllers
                     //hesap doğrulama yapmamış | email & phone gibi
                 }
             }
+            return View();
+        }
+        [Authorize(Roles ="Admin, Member")]
+        public IActionResult GetUserInfo()
+        {
             return View();
         }
     }
