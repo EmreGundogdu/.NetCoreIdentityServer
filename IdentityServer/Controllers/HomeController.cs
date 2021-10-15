@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using IdentityServer.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,16 @@ namespace IdentityServer.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            return View(new UserCreateModel());
+        }
+        [HttpPost]
+        public IActionResult Create(UserCreateModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View(model);
         }
     }
 }
