@@ -15,11 +15,13 @@ namespace IdentityServer.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<AppRole> _roleManager;
 
-        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -41,9 +43,16 @@ namespace IdentityServer.Controllers
                     Gender = model.Gender,
                     UserName = model.Username
                 };
+                
                 var identityResult = await _userManager.CreateAsync(appUser, model.Password);
                 if (identityResult.Succeeded)
                 {
+                    await _roleManager.CreateAsync(new()
+                    {
+                        Name = "Admin",
+                        CreatedTime = DateTime.Now
+                    });
+                    await _userManager.AddToRoleAsync(appUser, "Admin");
                     return RedirectToAction("Index");
                 }
                 foreach (var error in identityResult.Errors)
@@ -78,9 +87,10 @@ namespace IdentityServer.Controllers
             }
             return View();
         }
-        [Authorize(Roles ="Admin, Member")]
+        [Authorize(Roles = "Admin, Member")]
         public IActionResult GetUserInfo()
         {
+            var userName = User.Identity.Name;
             return View();
         }
     }
