@@ -27,7 +27,14 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<IdentityContext>();
+            services.AddIdentity<AppUser, AppRole>(opt =>
+            {
+                opt.Password.RequireDigit = false; //mutlaka sayý içermesi için
+                opt.Password.RequiredLength = 1;
+                opt.Password.RequireUppercase = true;
+                opt.Password.RequireLowercase = true;
+                opt.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<IdentityContext>();
             services.AddDbContext<IdentityContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("IdentityServerConStr"));
