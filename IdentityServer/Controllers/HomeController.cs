@@ -60,7 +60,7 @@ namespace IdentityServer.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true);
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");

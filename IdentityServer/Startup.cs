@@ -34,6 +34,7 @@ namespace IdentityServer
                 opt.Password.RequireUppercase = true;
                 opt.Password.RequireLowercase = true;
                 opt.Password.RequireNonAlphanumeric = false;
+                opt.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<IdentityContext>();
             services.AddDbContext<IdentityContext>(opt =>
             {
