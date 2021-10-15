@@ -11,17 +11,17 @@
     <div class="mb-3">
         <label>Şifre : </label>
         <span asp-validation-for="Password" class="text-danger"></span>
-        <input asp-for="Password" class="form-control" />
+        <input type="password" asp-for="Password" class="form-control" />
     </div>
     <div class="mb-3">
         <label>Şifre Tekrarı : </label>
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        <input asp-for="ConfirmPassword" class="form-control" />
+        <input type="password" asp-for="ConfirmPassword" class="form-control" />
     </div>
     <div class="mb-3">
         <label>Email : </label>
         <span asp-validation-for="Email" class="text-danger"></span>
-        <input asp-for="Email" class="form-control" />
+        <input type="email" asp-for="Email" class="form-control" />
     </div>
     <div class="mb-3">
         <label>Cinsiyet : </label>
@@ -30,5 +30,6 @@
     </div>
     <div class="mb-3">
         <button type="submit" class="btn btn-primary">Kaydet</button>
-    </div>  
+    </div>
+    <div class="text-danger mt-3" asp-validation-summary="ModelOnly"></div>
 </form>
