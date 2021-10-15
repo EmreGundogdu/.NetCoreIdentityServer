@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
@@ -43,7 +44,7 @@ namespace IdentityServer.Controllers
                     Gender = model.Gender,
                     UserName = model.Username
                 };
-                
+
                 var identityResult = await _userManager.CreateAsync(appUser, model.Password);
                 if (identityResult.Succeeded)
                 {
@@ -91,6 +92,7 @@ namespace IdentityServer.Controllers
         public IActionResult GetUserInfo()
         {
             var userName = User.Identity.Name;
+            var role = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
             return View();
         }
     }

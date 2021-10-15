@@ -17,12 +17,17 @@
                         <li class="nav-item">
                             <a asp-action="Create" asp-controller="Home" class="nav-link">Kayıt Ol</a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link active" asp-action="SignIn" asp-controller="Home">Giriş Yap</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active">Pricing</a>
-                        </li>
+                        @if (User != null && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active">Pricing</a>
+                            </li>
+                        }
+
                         <li class="nav-item">
                             <a class="nav-link disabled">Disabled</a>
                         </li>
