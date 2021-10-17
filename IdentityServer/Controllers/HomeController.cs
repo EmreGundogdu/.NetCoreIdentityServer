@@ -77,7 +77,7 @@ namespace IdentityServer.Controllers
                 {
                     if (User.IsInRole("Admin"))
                     {
-                        return RedirectToAction("AdminPanel")
+                        return RedirectToAction("AdminPanel");
                     }
                     else
                     {
@@ -106,7 +106,12 @@ namespace IdentityServer.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AdminPanel()
         {
-
+            return View();
+        }
+        [Authorize(Roles = "Member")]
+        public IActionResult Panel()
+        {
+            return View();
         }
     }
 }
