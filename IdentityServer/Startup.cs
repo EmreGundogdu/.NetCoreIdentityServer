@@ -36,6 +36,15 @@ namespace IdentityServer
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<IdentityContext>();
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.Cookie.HttpOnly = false;
+                opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict; //Sadece ilgili domain ile kullanýlabilir
+                opt.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest; //sadece http'de çalýþýr always dersek | sameasrequest der isek gönderilen isteðe göre karþýlýk olur
+                opt.Cookie.Name = "Cookie";
+                opt.ExpireTimeSpan = TimeSpan.FromDays(25); //25 gün boyunca bilgiyi hatýrlar
+                opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("Home/SignIn");
+            });
             services.AddDbContext<IdentityContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("IdentityServerConStr"));
