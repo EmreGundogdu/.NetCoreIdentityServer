@@ -48,12 +48,16 @@ namespace IdentityServer.Controllers
                 var identityResult = await _userManager.CreateAsync(appUser, model.Password);
                 if (identityResult.Succeeded)
                 {
-                    await _roleManager.CreateAsync(new()
+                    var memberRole = await _roleManager.FindByNameAsync("Member");
+                    if (memberRole is null)
                     {
-                        Name = "Admin",
-                        CreatedTime = DateTime.Now
-                    });
-                    await _userManager.AddToRoleAsync(appUser, "Admin");
+                        await _roleManager.CreateAsync(new()
+                        {
+                            Name = "Admin",
+                            CreatedTime = DateTime.Now
+                        });
+                    }                   
+                    await _userManager.AddToRoleAsync(appUser, "Member");
                     return RedirectToAction("Index");
                 }
                 foreach (var error in identityResult.Errors)
@@ -75,7 +79,9 @@ namespace IdentityServer.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
-                    if (User.IsInRole("Admin"))
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Contains("Admin"))
                     {
                         return RedirectToAction("AdminPanel");
                     }
@@ -83,7 +89,7 @@ namespace IdentityServer.Controllers
                     {
                         return RedirectToAction("Panel");
                     }
-                    return RedirectToAction("Index");
+
                 }
                 else if (result.IsLockedOut)
                 {
