@@ -75,6 +75,14 @@ namespace IdentityServer.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
+                    if (User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("AdminPanel")
+                    }
+                    else
+                    {
+                        return RedirectToAction("Panel");
+                    }
                     return RedirectToAction("Index");
                 }
                 else if (result.IsLockedOut)
@@ -94,6 +102,11 @@ namespace IdentityServer.Controllers
             var userName = User.Identity.Name;
             var role = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
             return View();
+        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminPanel()
+        {
+
         }
     }
 }
