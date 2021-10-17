@@ -56,7 +56,7 @@ namespace IdentityServer.Controllers
                             Name = "Admin",
                             CreatedTime = DateTime.Now
                         });
-                    }                   
+                    }
                     await _userManager.AddToRoleAsync(appUser, "Member");
                     return RedirectToAction("Index");
                 }
@@ -67,9 +67,10 @@ namespace IdentityServer.Controllers
             }
             return View(model);
         }
-        public IActionResult SignIn()
+        public IActionResult SignIn(string returnUrl)
         {
-            return View();
+            ViewBag.ReturnUrl = returnUrl;
+            return View(new UserSignInModel { ReturnUrl = returnUrl });
         }
         [HttpPost]
         public async Task<IActionResult> SignIn(UserSignInModel model)
@@ -79,6 +80,10 @@ namespace IdentityServer.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
+                    if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
                     var user = await _userManager.FindByNameAsync(model.Username);
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("Admin"))
@@ -91,6 +96,7 @@ namespace IdentityServer.Controllers
                     }
 
                 }
+                
                 else if (result.IsLockedOut)
                 {
                     //hesap kilitli
@@ -116,6 +122,11 @@ namespace IdentityServer.Controllers
         }
         [Authorize(Roles = "Member")]
         public IActionResult Panel()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Member")]
+        public IActionResult MemberPage()
         {
             return View();
         }
