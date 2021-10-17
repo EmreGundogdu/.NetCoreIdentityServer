@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
 {
-    [AutoValidateAntiforgeryToken]
+    [AutoValidateAntiforgeryToken] //Bu sunucunun üretmediği x bir noktadan belirli istekler yapılmayacak (güvenli)
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
