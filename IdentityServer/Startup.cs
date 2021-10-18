@@ -43,7 +43,7 @@ namespace IdentityServer
                 opt.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest; //sadece http'de çalýþýr always dersek | sameasrequest der isek gönderilen isteðe göre karþýlýk olur
                 opt.Cookie.Name = "Cookie";
                 opt.ExpireTimeSpan = TimeSpan.FromDays(25); //25 gün boyunca bilgiyi hatýrlar
-                opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("Home/SignIn");
+                opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Home/SignIn");
             });
             services.AddDbContext<IdentityContext>(opt =>
             {

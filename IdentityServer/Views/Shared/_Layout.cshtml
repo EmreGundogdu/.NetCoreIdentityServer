@@ -18,19 +18,26 @@
                             <a asp-action="Create" asp-controller="Home" class="nav-link">Kayıt Ol</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-action="SignIn" asp-controller="Home">Giriş Yap</a>
-                        </li>
+
                         @if (User != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link active">Pricing</a>
                             </li>
                         }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="SignOut" asp-controller="Home">Çıkış Yap</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="SignIn" asp-controller="Home">Giriş Yap</a>
+                            </li>
+                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Disabled</a>
-                        </li>
                     </ul>
                 </div>
             </div>

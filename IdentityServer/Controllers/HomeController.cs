@@ -53,7 +53,7 @@ namespace IdentityServer.Controllers
                     {
                         await _roleManager.CreateAsync(new()
                         {
-                            Name = "Admin",
+                            Name = "Member",
                             CreatedTime = DateTime.Now
                         });
                     }
@@ -77,7 +77,7 @@ namespace IdentityServer.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true); //username,password,benihatırla,locklama
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, true); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
@@ -129,6 +129,11 @@ namespace IdentityServer.Controllers
         public IActionResult MemberPage()
         {
             return View();
+        }
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
         }
     }
 }
