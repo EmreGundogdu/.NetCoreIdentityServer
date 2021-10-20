@@ -96,7 +96,7 @@ namespace IdentityServer.Controllers
                     }
 
                 }
-                
+
                 else if (result.IsLockedOut)
                 {
                     //hesap kilitli
