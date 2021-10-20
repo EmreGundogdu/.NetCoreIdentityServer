@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Entities
 {
-    public class AppRole : IdentityRole<int>
+    public class AppRole : IdentityRole<int> //tablo id'si int olsun
     {
         public DateTime CreatedTime { get; set; }
     }
