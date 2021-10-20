@@ -57,7 +57,7 @@ namespace IdentityServer.Controllers
                             CreatedTime = DateTime.Now
                         });
                     }
-                    await _userManager.AddToRoleAsync(appUser, "Member");
+                    await _userManager.AddToRoleAsync(appUser, "Admin");
                     return RedirectToAction("Index");
                 }
                 foreach (var error in identityResult.Errors)
@@ -77,7 +77,7 @@ namespace IdentityServer.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, true); //username,password,benihatırla,locklama
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrWhiteSpace(model.ReturnUrl))

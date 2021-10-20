@@ -34,7 +34,7 @@ namespace IdentityServer
                 opt.Password.RequireUppercase = true;
                 opt.Password.RequireLowercase = true;
                 opt.Password.RequireNonAlphanumeric = false;
-                opt.SignIn.RequireConfirmedEmail = true;
+                opt.SignIn.RequireConfirmedEmail = false;
             }).AddEntityFrameworkStores<IdentityContext>();
             services.ConfigureApplicationCookie(opt =>
             {
