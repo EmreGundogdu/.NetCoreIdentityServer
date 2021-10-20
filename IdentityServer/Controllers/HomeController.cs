@@ -45,8 +45,8 @@ namespace IdentityServer.Controllers
                     UserName = model.Username
                 };
 
-                var identityResult = await _userManager.CreateAsync(appUser, model.Password);
-                if (identityResult.Succeeded)
+                var result = await _userManager.CreateAsync(appUser, model.Password);
+                if (result.Succeeded)
                 {
                     var memberRole = await _roleManager.FindByNameAsync("Member");
                     if (memberRole is null)
@@ -60,7 +60,7 @@ namespace IdentityServer.Controllers
                     await _userManager.AddToRoleAsync(appUser, "Admin");
                     return RedirectToAction("Index");
                 }
-                foreach (var error in identityResult.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
