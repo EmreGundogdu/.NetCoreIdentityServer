@@ -1,4 +1,5 @@
 using IdentityServer.Context;
+using IdentityServer.CustomDescriber;
 using IdentityServer.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ namespace IdentityServer
         {
             services.AddIdentity<AppUser, AppRole>(opt =>
             {
+                //.AddErrorDescriber<CustomErrorDescriber>() -> Bunu addEntityFrameworkStores'den önce yazmalýyýz daha sonra bizim türkçe mesajlarýmýz kullanýlacak. & Ve password optionslarýný commentlemeliyiz customErrorDesriber'i eklerken
                 opt.Password.RequireDigit = false; //mutlaka sayý içermesi için
                 opt.Password.RequiredLength = 1;
                 opt.Password.RequireUppercase = true;
