@@ -77,6 +77,7 @@ namespace IdentityServer.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByNameAsync(model.Username);
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false); //username,password,benihatırla,locklama
                 if (result.Succeeded)
                 {
@@ -84,7 +85,7 @@ namespace IdentityServer.Controllers
                     {
                         return Redirect(model.ReturnUrl);
                     }
-                    var user = await _userManager.FindByNameAsync(model.Username);
+
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("Admin"))
                     {
@@ -96,15 +97,26 @@ namespace IdentityServer.Controllers
                     }
 
                 }
-
                 else if (result.IsLockedOut)
                 {
-                    //hesap kilitli
+                    ModelState.AddModelError("", "Hesabınız geçici süre ile kilitlenmiştir.");
                 }
-                else if (result.IsNotAllowed)
+                else
                 {
-                    //hesap doğrulama yapmamış | email & phone gibi
+                    string message = string.Empty;
+
+                    if (user != null)
+                    {
+                        var failedCount = await _userManager.GetAccessFailedCountAsync(user);
+                        message = $"If You Try {(_userManager.Options.Lockout.MaxFailedAccessAttempts - failedCount)} More Then Your Account Will Be LockOut";
+                    }
+                    else
+                    {
+                        message = "Kullanıcı Adı Veya Şifre Hatalı";
+                    }
+                    ModelState.AddModelError("", message);
                 }
+
             }
             return View();
         }

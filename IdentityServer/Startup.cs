@@ -37,6 +37,7 @@ namespace IdentityServer
                 opt.Password.RequireLowercase = true;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.SignIn.RequireConfirmedEmail = false;
+                opt.Lockout.MaxFailedAccessAttempts = 10; // en fazla 10 kere yanlýþ girilebilir
             }).AddEntityFrameworkStores<IdentityContext>();
             services.ConfigureApplicationCookie(opt =>
             {
