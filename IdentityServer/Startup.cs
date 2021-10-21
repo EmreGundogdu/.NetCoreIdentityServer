@@ -47,6 +47,7 @@ namespace IdentityServer
                 opt.Cookie.Name = "Cookie";
                 opt.ExpireTimeSpan = TimeSpan.FromDays(25); //25 gün boyunca bilgiyi hatýrlar
                 opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Home/SignIn");
+                opt.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Home/AccessDenied"); //Giriþ yapýlamadýðýnda buraya yönlendirilir.
             });
             services.AddDbContext<IdentityContext>(opt =>
             {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class UserController : Controller
     {
         public IActionResult Index()

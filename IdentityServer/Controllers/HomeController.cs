@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
 {
-    [AutoValidateAntiforgeryToken] //Bu sunucunun üretmediği x bir noktadan belirli istekler yapılmayacak (güvenli)
+    [AutoValidateAntiforgeryToken] //Bu sunucunun üretmediği x bir noktadan belirli istekler yapılmayacak (güvenli) 
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -26,6 +26,10 @@ namespace IdentityServer.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult AccessDenied()
         {
             return View();
         }
@@ -57,7 +61,7 @@ namespace IdentityServer.Controllers
                             CreatedTime = DateTime.Now
                         });
                     }
-                    await _userManager.AddToRoleAsync(appUser, "Admin");
+                    await _userManager.AddToRoleAsync(appUser, "Member");
                     return RedirectToAction("Index");
                 }
                 foreach (var error in result.Errors)
