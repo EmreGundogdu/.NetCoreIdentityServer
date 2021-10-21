@@ -21,10 +21,10 @@ namespace IdentityServer.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var query = _userManager.Users;
-            var users = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new
+            var usersWithOutAdminRole = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new
             {
                 user,
                 userRole
@@ -45,6 +45,7 @@ namespace IdentityServer.Controllers
                 PhoneNumber = x.user.PhoneNumber,
                 UserName = x.user.UserName
             }).ToList();
+            var users = await _userManager.GetUsersInRoleAsync("Member"); //Member olan userları getirmek için en kısa yol | join atmak yerine
             return View();
         }
     }
