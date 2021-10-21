@@ -99,6 +99,7 @@ namespace IdentityServer.Controllers
                 }
                 else if (result.IsLockedOut)
                 {
+                    var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
                     ModelState.AddModelError("", "Hesabınız geçici süre ile kilitlenmiştir.");
                 }
                 else
