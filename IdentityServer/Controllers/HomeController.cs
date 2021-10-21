@@ -108,7 +108,7 @@ namespace IdentityServer.Controllers
             }
             return View();
         }
-        [Authorize(Roles = "Admin, Member")]
+        [Authorize(Roles = "Admin, Member")] //admin ve memberlar erişebilir  
         public IActionResult GetUserInfo()
         {
             var userName = User.Identity.Name;
