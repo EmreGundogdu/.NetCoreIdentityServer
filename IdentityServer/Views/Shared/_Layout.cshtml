@@ -20,7 +20,7 @@
                         @if (User != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link active">Pricing</a>
+                                <a class="nav-link active" asp-action="Index" asp-controller="User">User List</a>
                             </li>
                         }
                         @if (User.Identity.IsAuthenticated)

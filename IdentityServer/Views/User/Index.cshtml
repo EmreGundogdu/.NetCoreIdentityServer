@@ -1,4 +1,24 @@
-﻿@{ 
+﻿@model List<AppUser>
+@{
     Layout = "_Layout";
 }
-<div class="lead">User / Index</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Gender</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.Gender</td>
+                <td>@item.Email</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
