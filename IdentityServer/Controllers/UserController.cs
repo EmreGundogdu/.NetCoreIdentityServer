@@ -79,7 +79,7 @@ namespace IdentityServer.Controllers
                         });
                     }
                     await _userManager.AddToRoleAsync(user, "Admin");
-                    return RedirectToAction("Index", "User");
+                    return RedirectToAction("Index", "User"); 
                 }
                 else
                 {
