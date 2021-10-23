@@ -26,30 +26,40 @@ namespace IdentityServer.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var query = _userManager.Users;
-            var users = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new
-            {
-                user,
-                userRole
-            }).Join(_context.Roles, two => two.userRole.RoleId, role => role.Id, (two, role) => new { two.user, two.userRole, role }).Where(x => x.role.Name != "Admin").Select(x => new AppUser
-            {
-                Id = x.user.Id,
-                AccessFailedCount = x.user.AccessFailedCount,
-                ConcurrencyStamp = x.user.ConcurrencyStamp,
-                Email = x.user.Email,
-                EmailConfirmed = x.user.EmailConfirmed,
-                Gender = x.user.Gender,
-                ImagePath = x.user.ImagePath,
-                LockoutEnabled = x.user.LockoutEnabled,
-                LockoutEnd = x.user.LockoutEnd,
-                NormalizedEmail = x.user.NormalizedEmail,
-                NormalizedUserName = x.user.NormalizedUserName,
-                PasswordHash = x.user.PasswordHash,
-                PhoneNumber = x.user.PhoneNumber,
-                UserName = x.user.UserName
-            }).ToList();
+            //var query = _userManager.Users;
+            //var users = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new
+            //{
+            //    user,
+            //    userRole
+            //}).Join(_context.Roles, two => two.userRole.RoleId, role => role.Id, (two, role) => new { two.user, two.userRole, role }).Where(x => x.role.Name != "Admin").Select(x => new AppUser
+            //{
+            //    Id = x.user.Id,
+            //    AccessFailedCount = x.user.AccessFailedCount,
+            //    ConcurrencyStamp = x.user.ConcurrencyStamp,
+            //    Email = x.user.Email,
+            //    EmailConfirmed = x.user.EmailConfirmed,
+            //    Gender = x.user.Gender,
+            //    ImagePath = x.user.ImagePath,
+            //    LockoutEnabled = x.user.LockoutEnabled,
+            //    LockoutEnd = x.user.LockoutEnd,
+            //    NormalizedEmail = x.user.NormalizedEmail,
+            //    NormalizedUserName = x.user.NormalizedUserName,
+            //    PasswordHash = x.user.PasswordHash,
+            //    PhoneNumber = x.user.PhoneNumber,
+            //    UserName = x.user.UserName
+            //}).ToList();
+
             //var users = await _userManager.GetUsersInRoleAsync("Member"); //Member olan userları getirmek için en kısa yol | join atmak yerine
-            return View(users);
+            //return View(users);
+            List<AppUser> filteredUsers = new List<AppUser>();
+            var users = _userManager.Users.ToList();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (!roles.Contains("Admin"))
+                    filteredUsers.Add(user);
+            }
+            return View(filteredUsers);
         }
         public IActionResult Create()
         {
@@ -114,7 +124,24 @@ namespace IdentityServer.Controllers
         [HttpPost]
         public async Task<IActionResult> AssignRole(RoleAssignSendModel model)
         {
-            return View();
+            //rol ekleme => seçili rolun olmaması gerekir
+            //rol çıkarma => seçilen rolun olması gerekir,
+            var user = _userManager.Users.SingleOrDefault(x => x.Id == model.UserId);
+            var userRole = await _userManager.GetRolesAsync(user);
+            foreach (var role in model.Roles)
+            {
+                if (role.Exist)
+                {
+                    if (!userRole.Contains(role.RoleName))
+                        await _userManager.AddToRoleAsync(user, role.RoleName);
+                }
+                else
+                {
+                    if (userRole.Contains(role.RoleName))
+                        await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }
