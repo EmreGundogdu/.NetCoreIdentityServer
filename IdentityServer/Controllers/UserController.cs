@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Context;
 using IdentityServer.Entities;
+using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace IdentityServer.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IdentityContext _context;
-        public UserController(UserManager<AppUser> userManager, IdentityContext context)
+        private readonly RoleManager<AppRole> _roleManager;
+        public UserController(UserManager<AppUser> userManager, IdentityContext context, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _context = context;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -47,6 +50,46 @@ namespace IdentityServer.Controllers
             //}).ToList();
             var users = await _userManager.GetUsersInRoleAsync("Member"); //Member olan userları getirmek için en kısa yol | join atmak yerine
             return View(users);
+        }
+        public IActionResult Create()
+        {
+            return View(new UserAdminCreateModel());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(UserAdminCreateModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new AppUser
+                {
+                    Email = model.Email,
+                    UserName = model.Username,
+                    Gender = model.Gender
+                };
+                var result = await _userManager.CreateAsync(user, model.Username + "123");
+                if (result.Succeeded)
+                {
+                    var memberRole = await _roleManager.FindByNameAsync("Member");
+                    if (memberRole is null)
+                    {
+                        await _roleManager.CreateAsync(new()
+                        {
+                            Name = "Member",
+                            CreatedTime = DateTime.Now
+                        });
+                    }
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    foreach (var item in result.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description);
+                    }
+                }
+            }
+            return View(model);
         }
     }
 }
