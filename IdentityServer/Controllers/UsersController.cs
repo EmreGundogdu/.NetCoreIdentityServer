@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 namespace IdentityServer.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IdentityContext _context;
         private readonly RoleManager<AppRole> _roleManager;
-        public UserController(UserManager<AppUser> userManager, IdentityContext context, RoleManager<AppRole> roleManager)
+        public UsersController(UserManager<AppUser> userManager, IdentityContext context, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _context = context;
