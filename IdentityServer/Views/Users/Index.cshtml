@@ -20,8 +20,10 @@
                 <td>@item.UserName</td>
                 <td>@item.Gender</td>
                 <td>@item.Email</td>
-                <td></td>
-                <td></td>
+                <td><get-user-info user-id="@item.Id"></get-user-info></td>
+                <td>
+                    <a asp-action="AssignRole" asp-route-id="@item.Id">Assign Role</a>
+                </td>
             </tr>
         }
 
